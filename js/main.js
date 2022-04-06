@@ -12,32 +12,37 @@ const elAllCount = document.querySelector(".all-count");
 const elComplateCount = document.querySelector(".complate-count");
 const elUnComplateCount = document.querySelector(".uncomplate-count");
 
-const todos = [];
+let localTodos = JSON.parse(window.localStorage.getItem("list"));
+const todos = localTodos || [];
 
-elList.addEventListener("click",evt=>{
+renderTodo(todos , elList);
+
+elList.addEventListener("click",evt => {
   if(evt.target.matches(".todo-list__btn")){
     const btnId = evt.target.dataset.todoId;
 
     const findIndexArr = todos.findIndex(todo => todo.id == btnId);
     todos.splice(findIndexArr , 1);
     renderTodo(todos,elList);
+    window.localStorage.setItem("list" , JSON.stringify(todos));
   }else if(evt.target.matches(".todo-list__check")){
     const inputCheckedId = Number(evt.target.dataset.todoId);
 
     const findElement = todos.find(todo => todo.id === inputCheckedId);
     findElement.isComplated = !findElement.isComplated;
     renderTodo(todos,elList);
+    window.localStorage.setItem("list" , JSON.stringify(todos));
   }
 })
 
 function renderTodo(arr,element){
   element.innerHTML = "";
 
-  elAllCount.textContent = arr.length;
+  elAllCount.textContent = todos.length;
 
-  elComplateCount.textContent = arr.filter(e => e.isComplated === true).length;
+  elComplateCount.textContent = todos.filter(e => e.isComplated === true).length;
 
-  elUnComplateCount.textContent = arr.filter(e => e.isComplated === false).length;
+  elUnComplateCount.textContent = todos.filter(e => e.isComplated === false).length;
 
   let i = 1;
   arr.forEach(todo => {
@@ -84,7 +89,8 @@ elForm.addEventListener("submit" , evt =>{
     isComplated:false
   };
   todos.push(todo);
-  renderTodo(todos,elList)
+  renderTodo(todos,elList);
+  window.localStorage.setItem("list", JSON.stringify(todos));
   elFormInput.value = "";
 })
 
