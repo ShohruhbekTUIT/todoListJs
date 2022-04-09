@@ -12,6 +12,8 @@ const elAllCount = document.querySelector(".all-count");
 const elComplateCount = document.querySelector(".complate-count");
 const elUnComplateCount = document.querySelector(".uncomplate-count");
 
+const elTemplate = document.querySelector(".todo-template").content;
+
 let localTodos = JSON.parse(window.localStorage.getItem("list"));
 const todos = localTodos || [];
 
@@ -38,6 +40,7 @@ elList.addEventListener("click",evt => {
 function renderTodo(arr,element){
   element.innerHTML = "";
 
+  console.log(todos);
   elAllCount.textContent = todos.length;
 
   elComplateCount.textContent = todos.filter(e => e.isComplated === true).length;
@@ -46,30 +49,36 @@ function renderTodo(arr,element){
 
   let i = 1;
   arr.forEach(todo => {
-    const newItem = document.createElement("li");
-    const newItemDiv = document.createElement("div");
-    const newInput = document.createElement("input");
-    const newBtn = document.createElement("button");
+    // const newItem = document.createElement("li");
+    // const newItemDiv = document.createElement("div");
+    // const newInput = document.createElement("input");
+    // const newBtn = document.createElement("button");
     
-    newBtn.style.backgroundColor = "red";
+    // newBtn.style.backgroundColor = "red";
 
-    newItem.textContent =String(i++) +" - " + todo.title;
-    newInput.type = "checkbox";
-    newBtn.textContent = "Delete";
-    newBtn.classList.add("todo-list__btn");
-    newBtn.dataset.todoId = todo.id;
-    newInput.dataset.todoId = todo.id;
-    newItemDiv.appendChild(newInput);
-    newItemDiv.appendChild(newBtn);
-    newItem.appendChild(newItemDiv);
-    newInput.classList.add("todo-list__check");
+    // newItem.textContent =String(i++) +" - " + todo.title;
+    // newInput.type = "checkbox";
+    // newBtn.textContent = "Delete";
+    // newBtn.classList.add("todo-list__btn");
+    // newBtn.dataset.todoId = todo.id;
+    // newInput.dataset.todoId = todo.id;
+    // newItemDiv.appendChild(newInput);
+    // newItemDiv.appendChild(newBtn);
+    // newItem.appendChild(newItemDiv);
+    // newInput.classList.add("todo-list__check");
 
+      const clonedTemplate =elTemplate.cloneNode(true);
+
+      clonedTemplate.querySelector(".item-num").textContent = String(i++) +" - ";
+      clonedTemplate.querySelector(".item-title").textContent = todo.title;
+      clonedTemplate.querySelector(".todo-list__btn").textContent = "Delete";
+      clonedTemplate.querySelector(".todo-list__check").dataset.todoId = todo.id;
+      clonedTemplate.querySelector(".todo-list__btn").dataset.todoId = todo.id;
 
     if(todo.isComplated){
-      newInput.checked = true;
-      newItem.style.textDecoration = "line-through";
+      clonedTemplate.querySelector(".todo-list__check").checked = true;
     }
-    element.appendChild(newItem);
+    element.appendChild(clonedTemplate);
   });
 }
 
